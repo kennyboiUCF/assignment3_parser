@@ -166,8 +166,11 @@ int parser(TokenList tokenList, FILE* out)
 int program()
 {
     printNonTerminal(PROGRAM);
-
-    /* TODO: Implement */
+    block();
+    if (getCurrentTokenType() != periodsym)
+    {
+        return 0;
+    }
 
     return 0;
 }
@@ -175,9 +178,82 @@ int program()
 int block()
 {
     printNonTerminal(BLOCK);
-
-    /* TODO: Implement */
-
+    if (getCurrentTokenType() == constsym)
+    {
+        while (getCurrentTokenType() == commasym)
+        {
+            if (getCurrentTokenType() != identsym)
+            {
+                <#statements#>
+            }
+            
+            if (getCurrentTokenType() != eqsym)
+            {
+                <#statements#>
+            }
+            
+            if (getCurrentTokenType() != numbersym)
+            {
+                <#statements#>
+            }
+            printCurrentToken();
+            nextToken();
+        }
+        if (getCurrentTokenType() != semicolonsym)
+        {
+            return err;
+        }
+        printCurrentToken();
+        nextToken();
+    }
+    
+    if (getCurrentTokenType() == intsym)
+    {
+        while (getCurrentTokenType() == commasym)
+        {
+            printCurrentToken();
+            nextToken();
+            if (getCurrentTokenType() != identsym)
+            {
+                //error
+            }
+            printCurrentToken();
+            nextToken();
+        }
+        if (getCurrentTokenType() != semicolonsym)
+        {
+            //error
+        }
+        printCurrentToken();
+        nextToken();
+    }
+    
+    while (getCurrentTokenType() == procsym)
+    {
+        printCurrentToken();
+        nextToken();
+        if (getCurrentTokenType() != identsym)
+        {
+            //error
+        }
+        printCurrentToken();
+        nextToken();
+        if (getCurrentTokenType() != semicolonsym)
+        {
+            //error
+        }
+        printCurrentToken();
+        nextToken();
+        block();
+        if (getCurrentTokenType() != semicolonsym)
+        {
+            //error
+        }
+        printCurrentToken();
+        nextToken();
+    }
+    
+    statement();
     return 0;
 }
 
