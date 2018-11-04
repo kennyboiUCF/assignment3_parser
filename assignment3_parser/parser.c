@@ -180,77 +180,85 @@ int block()
     printNonTerminal(BLOCK);
     if (getCurrentTokenType() == constsym)
     {
+        printNonTerminal(CONST_DECLARATION);
         while (getCurrentTokenType() == commasym)
         {
+            printCurrentToken();
+            nextToken();
             if (getCurrentTokenType() != identsym)
             {
-                <#statements#>
+                return 3;
             }
+            printCurrentToken();
+            nextToken();
             
             if (getCurrentTokenType() != eqsym)
             {
-                <#statements#>
+                return 2;
             }
-            
+            printCurrentToken();
+            nextToken();
             if (getCurrentTokenType() != numbersym)
             {
-                <#statements#>
+                return 1;
             }
             printCurrentToken();
             nextToken();
         }
         if (getCurrentTokenType() != semicolonsym)
         {
-            return err;
+            return 5;
         }
-        printCurrentToken();
-        nextToken();
+        return 0;
     }
     
-    if (getCurrentTokenType() == intsym)
+    if (getCurrentTokenType() == varsym)
     {
+        printNonTerminal(VAR_DECLARATION);
         while (getCurrentTokenType() == commasym)
         {
             printCurrentToken();
             nextToken();
             if (getCurrentTokenType() != identsym)
             {
-                //error
+                return 3;
             }
             printCurrentToken();
             nextToken();
         }
         if (getCurrentTokenType() != semicolonsym)
         {
-            //error
+            return 5;
         }
         printCurrentToken();
         nextToken();
     }
     
-    while (getCurrentTokenType() == procsym)
+    if (getCurrentTokenType() == procsym)
     {
-        printCurrentToken();
-        nextToken();
-        if (getCurrentTokenType() != identsym)
+        printNonTerminal(PROC_DECLARATION);
+        while (getCurrentTokenType() == procsym)
         {
-            //error
+            printCurrentToken();
+            nextToken();
+            if (getCurrentTokenType() != identsym)
+            {
+                return 3;
+            }
+            printCurrentToken();
+            nextToken();
+            if (getCurrentTokenType() != semicolonsym)
+            {
+                return 5;
+            }
+            printCurrentToken();
+            nextToken();
+            block();
+            if (getCurrentTokenType() != semicolonsym)
+            {
+                return 5;
+            }
         }
-        printCurrentToken();
-        nextToken();
-        if (getCurrentTokenType() != semicolonsym)
-        {
-            //error
-        }
-        printCurrentToken();
-        nextToken();
-        block();
-        if (getCurrentTokenType() != semicolonsym)
-        {
-            //error
-        }
-        printCurrentToken();
-        nextToken();
     }
     
     statement();
@@ -260,28 +268,103 @@ int block()
 int const_declaration()
 {
     printNonTerminal(CONST_DECLARATION);
-    
-
+    if (getCurrentTokenType() == constsym)
+    {
+        while (getCurrentTokenType() == commasym)
+        {
+            printCurrentToken();
+            nextToken();
+            if (getCurrentTokenType() != identsym)
+            {
+                return 3;
+            }
+            printCurrentToken();
+            nextToken();
+            
+            if (getCurrentTokenType() != eqsym)
+            {
+                return 2;
+            }
+            printCurrentToken();
+            nextToken();
+            if (getCurrentTokenType() != numbersym)
+            {
+                return 1;
+            }
+            printCurrentToken();
+            nextToken();
+        }
+        if (getCurrentTokenType() != semicolonsym)
+        {
+            return 1;
+        }
+        return 0;
+    }
     // Successful parsing.
-    return 0;
+    else
+    {
+        return 1;
+    }
 }
 
 int var_declaration()
 {
     printNonTerminal(VAR_DECLARATION);
 
-    /* TODO: Implement */
-
-    return 0;
+    if (getCurrentTokenType() == varsym)
+    {
+        while (getCurrentTokenType() == commasym)
+        {
+            printCurrentToken();
+            nextToken();
+            if (getCurrentTokenType() != identsym)
+            {
+                return 1;
+            }
+            printCurrentToken();
+            nextToken();
+        }
+        if (getCurrentTokenType() != semicolonsym)
+        {
+            return 1;
+        }
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
 }
 
 int proc_declaration()
 {
     printNonTerminal(PROC_DECLARATION);
-
-    /* TODO: Implement */
-
-    return 0;
+    
+    while (getCurrentTokenType() == procsym)
+    {
+        printCurrentToken();
+        nextToken();
+        if (getCurrentTokenType() != identsym)
+        {
+            return 3;
+        }
+        printCurrentToken();
+        nextToken();
+        if (getCurrentTokenType() != semicolonsym)
+        {
+            return 5;
+        }
+        printCurrentToken();
+        nextToken();
+        block();
+        if (getCurrentTokenType() != semicolonsym)
+        {
+            return 5;
+            
+        }
+        return 0;
+    }
+    return 7;
 }
 
 int statement()
@@ -294,7 +377,7 @@ int statement()
         nextToken();
         if (getCurrentTokenType() != becomessym)
         {
-            //ERROR
+            return 7;
         }
         printCurrentToken();
         nextToken();
@@ -306,7 +389,7 @@ int statement()
         nextToken();
         if (getCurrentTokenType() != identsym)
         {
-            //ERROR!
+            return 7;
         }
         printCurrentToken();
         nextToken();
@@ -325,7 +408,7 @@ int statement()
     }
     if (getCurrentTokenType() != endsym)
     {
-        //ERROR!
+        return 14;
     }
     printCurrentToken();
     nextToken();
@@ -337,7 +420,7 @@ int statement()
         condition();
         if(getCurrentTokenType() != thensym)
         {
-            //ERROR
+            return 9;
         }
         printCurrentToken();
         nextToken();
@@ -351,7 +434,7 @@ int statement()
         condition();
         if (getCurrentTokenType() != dosym)
         {
-            //ERROR
+            return 11;
         }
         printCurrentToken();
         nextToken();
@@ -375,7 +458,7 @@ int condition()
         expression();
         if (relop() != 0)
         {
-            //ERROR
+            return 12;
         }
         printCurrentToken();
         nextToken();
@@ -388,9 +471,15 @@ int relop()
 {
     printNonTerminal(REL_OP);
 
-    /* TODO: Implement */
-
-    return 0;
+    if (getCurrentTokenType() != eqsym || getCurrentTokenType() != neqsym || getCurrentTokenType() != lessym || getCurrentTokenType() != leqsym || getCurrentTokenType() != gtrsym || getCurrentTokenType() != geqsym )
+    {
+        return 0;
+    }
+    
+    else
+    {
+        return 13;
+    }
 }
 
 int expression()
