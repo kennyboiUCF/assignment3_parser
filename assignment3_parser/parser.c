@@ -396,18 +396,32 @@ int relop()
 int expression()
 {
     printNonTerminal(EXPRESSION);
-
-    /* TODO: Implement */
-
+    if(getCurrentTokenType() == plussym || getCurrentTokenType() == minussym)
+    {
+        printCurrentToken();
+        nextToken();
+    }
+    term();
+    while (getCurrentTokenType() == plussym || getCurrentTokenType() == minussym)
+    {
+        printCurrentToken();
+        nextToken();
+        term();
+    }
     return 0;
 }
 
 int term()
 {
     printNonTerminal(TERM);
-
-    /* TODO: Implement */
-
+    
+    factor();
+    while (getCurrentTokenType() == multsym || getCurrentTokenType() == slashsym)
+    {
+        printCurrentToken();
+        nextToken();
+        factor();
+    }
     return 0;
 }
 
