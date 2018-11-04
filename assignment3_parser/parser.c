@@ -363,9 +363,24 @@ int statement()
 int condition()
 {
     printNonTerminal(CONDITION);
-
-    /* TODO: Implement */
-
+    
+    if(getCurrentTokenType() == oddsym)
+    {
+        printCurrentToken();
+        nextToken();
+        expression();
+    }
+    else
+    {
+        expression();
+        if (relop() != 0)
+        {
+            //ERROR
+        }
+        printCurrentToken();
+        nextToken();
+        expression();
+    }
     return 0;
 }
 
