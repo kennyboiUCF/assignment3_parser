@@ -260,8 +260,7 @@ int block()
 int const_declaration()
 {
     printNonTerminal(CONST_DECLARATION);
-
-    /* TODO: Implement */
+    
 
     // Successful parsing.
     return 0;
@@ -288,9 +287,76 @@ int proc_declaration()
 int statement()
 {
     printNonTerminal(STATEMENT);
-
-    /* TODO: Implement */
-
+    
+    if (getCurrentTokenType() == identsym)
+    {
+        printCurrentToken();
+        nextToken();
+        if (getCurrentTokenType() != becomessym)
+        {
+            //ERROR
+        }
+        printCurrentToken();
+        nextToken();
+        expression();
+    }
+    else if (getCurrentTokenType() == callsym)
+    {
+        printCurrentToken();
+        nextToken();
+        if (getCurrentTokenType() != identsym)
+        {
+            //ERROR!
+        }
+        printCurrentToken();
+        nextToken();
+    }
+    else if (getCurrentTokenType() == beginsym)
+    {
+        printCurrentToken();
+        nextToken();
+        statement();
+        while (getCurrentTokenType() == semicolonsym)
+        {
+            printCurrentToken();
+            nextToken();
+            statement();
+        }
+    }
+    if (getCurrentTokenType() != endsym)
+    {
+        //ERROR!
+    }
+    printCurrentToken();
+    nextToken();
+    
+    if (getCurrentTokenType() == ifsym)
+    {
+        printCurrentToken();
+        nextToken();
+        condition();
+        if(getCurrentTokenType() != thensym)
+        {
+            //ERROR
+        }
+        printCurrentToken();
+        nextToken();
+        statement();
+    }
+    
+    else if (getCurrentTokenType() == whilesym)
+    {
+        printCurrentToken();
+        nextToken();
+        condition();
+        if (getCurrentTokenType() != dosym)
+        {
+            //ERROR
+        }
+        printCurrentToken();
+        nextToken();
+        statement();
+    }
     return 0;
 }
 
