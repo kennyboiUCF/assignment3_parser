@@ -4,6 +4,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+//Kenneth Rosario Rodriguez
+//COP3402
+//ASSIGNMENT 3: PARSER
+
+
 /**
  * This pointer is set when by parser() func and used by printParsedToken() func.
  * 
