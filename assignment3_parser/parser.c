@@ -178,7 +178,7 @@ int program()
 int block()
 {
     printNonTerminal(BLOCK);
-    if (getCurrentTokenType() == constsym)
+    if (getCurrentTokenType() == constsym) // constant declaration
     {
         printNonTerminal(CONST_DECLARATION);
         while (getCurrentTokenType() == commasym)
@@ -212,7 +212,7 @@ int block()
         return 0;
     }
     
-    if (getCurrentTokenType() == varsym)
+    if (getCurrentTokenType() == varsym) //variable declaration
     {
         printNonTerminal(VAR_DECLARATION);
         while (getCurrentTokenType() == commasym)
@@ -234,7 +234,7 @@ int block()
         nextToken();
     }
     
-    if (getCurrentTokenType() == procsym)
+    if (getCurrentTokenType() == procsym) //procedure declaration
     {
         printNonTerminal(PROC_DECLARATION);
         while (getCurrentTokenType() == procsym)
@@ -300,7 +300,6 @@ int const_declaration()
         }
         return 0;
     }
-    // Successful parsing.
     else
     {
         return 1;
@@ -473,13 +472,14 @@ int relop()
 
     if (getCurrentTokenType() != eqsym || getCurrentTokenType() != neqsym || getCurrentTokenType() != lessym || getCurrentTokenType() != leqsym || getCurrentTokenType() != gtrsym || getCurrentTokenType() != geqsym )
     {
-        return 0;
+        return 12;
     }
     
     else
     {
-        return 13;
+        return 0;
     }
+    
 }
 
 int expression()
