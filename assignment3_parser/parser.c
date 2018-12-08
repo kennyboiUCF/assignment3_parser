@@ -296,7 +296,7 @@ int var_declaration()
         }
         if (getCurrentTokenType() != semicolonsym)
         {
-            return 1;
+            return 10;
         }
         return 0;
     }
@@ -334,7 +334,7 @@ int proc_declaration()
         }
         return 0;
     }
-    return 7;
+    return 1;
 }
 
 int statement()
